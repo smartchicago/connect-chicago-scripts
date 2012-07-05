@@ -14,8 +14,13 @@ DB.run("truncate table program")
 $total_inserted = 0
 $total_duplicates = 0
 
-def location_exists(slug)
-  DB[:location].filter(:slug => slug).count > 0
+def get_location_id(slug)
+  location = DB[:location].filter(:slug => slug)
+  if (location.count == 0)
+    0
+  else
+    location.first[:id]
+  end
 end
 
 def insert_location(line)
@@ -23,7 +28,7 @@ def insert_location(line)
   #determine unique slug based on address
   slug = line[:address].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
   
-  if !location_exists(slug)
+  if get_location_id(slug) == 0
     puts "inserting #{slug}"
   
     DB[:location].insert( :slug => slug, 
