@@ -1,7 +1,6 @@
 source "http://rubygems.org"
 
-gem "pg"
-gem "sequel"
+gem "fusion_tables"
 
 gem "rake", "0.8.7"
 gem "chronic"

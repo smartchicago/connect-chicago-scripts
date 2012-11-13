@@ -1,2 +1,5 @@
 source
 .rvmrc
+.DS_Store
+data
+config.yml
