@@ -4,9 +4,12 @@ require 'csv'
 require 'fusion_tables'
 require 'yaml'
 require 'date'
+require 'net/ftp'
+require 'fileutils'
 
 SEP = ","
-CSV_PATH = "backups/locations-#{Date.today.strftime("%m-%d-%Y")}.csv"
+CSV_PATH = "backups/connect-chicago-locations-#{Date.today.strftime("%Y-%m-%d")}.csv"
+CSV_UPLOAD = "backups/connect-chicago-locations.csv"
 
 # helper functions
 def header(hash)
@@ -25,6 +28,9 @@ begin
   fusion_table_id = yaml['fusion_table_id']
   google_account = yaml['google_account']
   google_password = yaml['google_password']
+  ftp_url = yaml['ftp_url']
+  ftp_user = yaml['ftp_user']
+  ftp_pass = yaml['ftp_pass']
 rescue Errno::ENOENT
   puts "config file not found"
 end
@@ -46,6 +52,7 @@ all_locations = FT.execute("SELECT * FROM #{fusion_table_id};")
 #puts all_locations
 
 # write to CSV
+puts "saving csv"
 CSV.open(CSV_PATH, "wb") do |csv|
   csv << all_locations.first.keys
   all_locations.each do |location|
@@ -53,7 +60,15 @@ CSV.open(CSV_PATH, "wb") do |csv|
   end
 end
 
-# TODO FTP to ETL server
+puts "copying file to '#{CSV_UPLOAD}'"
+`cp #{CSV_PATH} #{CSV_UPLOAD}`
+
+# FTP to ETL server
+puts "FTPing to ETL server"
+Net::FTP.open(ftp_url, ftp_user, ftp_pass) do |ftp|
+  ftp.passive = true
+  ftp.putbinaryfile(CSV_UPLOAD)
+end
 
 puts "done"
 nil
