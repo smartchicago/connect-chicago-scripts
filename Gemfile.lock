@@ -1,9 +1,14 @@
+GIT
+  remote: git://github.com/derekeder/fusion_tables.git
+  revision: 21e625ee3df2d24a3358de6fcf848dae3ba180ba
+  specs:
+    fusion_tables (0.3.2)
+      gdata_19 (>= 1.1.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
-    chronic (0.6.7)
-    fusion_tables (0.3.1)
-      gdata_19 (>= 1.1.2)
+    chronic (0.9.0)
     gdata_19 (1.1.5)
     rake (0.8.7)
 
@@ -12,5 +17,5 @@ PLATFORMS
 
 DEPENDENCIES
   chronic
-  fusion_tables
+  fusion_tables!
   rake (= 0.8.7)

@@ -1,6 +1,7 @@
 fusion_table_id: 
 google_account: 
 google_password: 
+google_api_key: 
 ftp_url: 
 ftp_user: 
 ftp_pass: 

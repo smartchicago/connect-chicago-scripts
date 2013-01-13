@@ -28,6 +28,7 @@ begin
   fusion_table_id = yaml['fusion_table_id']
   google_account = yaml['google_account']
   google_password = yaml['google_password']
+  google_api_key = yaml['google_api_key']
   ftp_url = yaml['ftp_url']
   ftp_user = yaml['ftp_user']
   ftp_pass = yaml['ftp_pass']
@@ -40,6 +41,7 @@ unless google_account.nil? || google_account == ''
   puts 'connecting to fusion tables'
   FT = GData::Client::FusionTables.new
   FT.clientlogin(google_account, google_password)
+  FT.set_api_key(google_api_key)
 end
 
 if File.exist?(CSV_PATH) 
