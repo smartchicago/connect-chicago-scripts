@@ -56,7 +56,7 @@ all_locations = FT.execute("SELECT * FROM #{fusion_table_id};")
 # write to CSV
 puts "saving csv"
 CSV.open(CSV_PATH, "wb") do |csv|
-  csv << all_locations.first.keys
+  # csv << all_locations.first.keys
   all_locations.each do |location|
     csv << location.values
   end
