@@ -10,6 +10,7 @@ GEM
   specs:
     chronic (0.9.0)
     gdata_19 (1.1.5)
+    json (1.7.6)
     rake (0.8.7)
 
 PLATFORMS
@@ -18,4 +19,5 @@ PLATFORMS
 DEPENDENCIES
   chronic
   fusion_tables!
+  json
   rake (= 0.8.7)
