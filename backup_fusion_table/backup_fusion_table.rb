@@ -11,17 +11,6 @@ SEP = ","
 CSV_PATH = "backups/connect-chicago-locations-#{Date.today.strftime("%Y-%m-%d")}.csv"
 CSV_UPLOAD = "backups/connect-chicago-locations.csv"
 
-# helper functions
-def header(hash)
-  hash.keys.join SEP
-end
-
-def to_csv(hash)
-  hash.values.map do |value|
-    escape value unless value.nil?
-  end.join SEP
-end
-
 # get login and fusion table settings
 begin
   yaml = YAML.load_file("config.yml")
@@ -58,6 +47,8 @@ puts "saving csv"
 CSV.open(CSV_PATH, "wb") do |csv|
   # csv << all_locations.first.keys
   all_locations.each do |location|
+    # append (lat,long) column
+    location[:location] = "(#{location[:latitude]},#{location[:longitude]})"
     csv << location.values
   end
 end
