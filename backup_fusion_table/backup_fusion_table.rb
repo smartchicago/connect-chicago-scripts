@@ -47,6 +47,16 @@ puts "saving csv"
 CSV.open(CSV_PATH, "wb") do |csv|
   # csv << all_locations.first.keys
   all_locations.each do |location|
+    # remove unused columns
+    location.delete(:checked)
+    location.delete(:notes)
+    location.delete(:tecservices_id)
+    location.delete(:october_open_house)
+
+    # append Connect Chicago url to slug
+    location[:url] = "http://locations.weconnectchicago.org/location/#{location[:slug]}"
+    location.delete(:slug)
+
     # append (lat,long) column
     location[:location] = "(#{location[:latitude]},#{location[:longitude]})"
     csv << location.values
