@@ -9,7 +9,7 @@ require 'fileutils'
 
 SEP = ","
 CSV_PATH = "backups/connect-chicago-locations-#{Date.today.strftime("%Y-%m-%d")}.csv"
-CSV_UPLOAD = "backups/connect-chicago-locations.csv"
+CSV_ETL = "backups/connect-chicago-locations.csv"
 
 # get login and fusion table settings
 begin
@@ -43,10 +43,26 @@ all_locations = FT.execute("SELECT * FROM #{fusion_table_id};")
 #puts all_locations
 
 # write to CSV
-puts "saving csv"
+puts "saving to #{CSV_PATH} for backup csv"
 CSV.open(CSV_PATH, "wb") do |csv|
-  # csv << all_locations.first.keys
-  all_locations.each do |location|
+  csv << all_locations.first.keys
+  all_locations.map do |location|
+    csv << location.values
+  end
+end
+
+puts "saving to #{CSV_ETL} for ETL"
+CSV.open(CSV_ETL, "wb") do |csv|
+  col_keys = all_locations.first.keys
+  col_keys.delete(:checked)
+  col_keys.delete(:notes)
+  col_keys.delete(:tecservices_id)
+  col_keys.delete(:october_open_house)
+  col_keys << :url
+  col_keys.delete(:slug)
+
+  csv << col_keys
+  all_locations.map do |location|
     # remove unused columns
     location.delete(:checked)
     location.delete(:notes)
@@ -63,14 +79,11 @@ CSV.open(CSV_PATH, "wb") do |csv|
   end
 end
 
-puts "copying file to '#{CSV_UPLOAD}'"
-`cp #{CSV_PATH} #{CSV_UPLOAD}`
-
 # FTP to ETL server
 puts "FTPing to ETL server"
 Net::FTP.open(ftp_url, ftp_user, ftp_pass) do |ftp|
   ftp.passive = true
-  ftp.putbinaryfile(CSV_UPLOAD)
+  ftp.putbinaryfile(CSV_ETL)
 end
 
 puts "done"
