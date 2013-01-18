@@ -46,23 +46,16 @@ all_locations = FT.execute("SELECT * FROM #{fusion_table_id};")
 puts "saving to #{CSV_PATH} for backup csv"
 CSV.open(CSV_PATH, "wb") do |csv|
   csv << all_locations.first.keys
-  all_locations.map do |location|
+  all_locations.each do |location|
     csv << location.values
   end
 end
 
 puts "saving to #{CSV_ETL} for ETL"
 CSV.open(CSV_ETL, "wb") do |csv|
-  col_keys = all_locations.first.keys
-  col_keys.delete(:checked)
-  col_keys.delete(:notes)
-  col_keys.delete(:tecservices_id)
-  col_keys.delete(:october_open_house)
-  col_keys << :url
-  col_keys.delete(:slug)
-
-  csv << col_keys
-  all_locations.map do |location|
+  csv_headers = [:id,:url,:organization_name,:organization_type,:full_address,:address,:city,:state,:zip_code,:org_phone,:hours,:website,:appointment,:internet,:wifi,:training,:pc_use_restrictions,:hardware_public,:assistive_technology,:internet_upload,:internet_download,:volunteers_used,:volunteers_used_how,:volunteers_wanted_how,:public_wifi_detail,:nearest_parking,:nearest_parking_detail,:public_transportation_detail,:time_allowed_per_user,:time_allowed_per_user_detail,:room_list,:handicap_access_detail,:friendly_description,:agency_leadership_contact,:agency_staff_person_contact_email,:twitter_handle,:training_types,:flickr_tag,:training_headline,:training_description,:training_url,:location_leadership,:location_leadership_email,:pcc_staff_person,:pcc_staff_person_email,:latitude,:longitude,:location]
+  # csv << csv_headers
+  all_locations.each do |location|
     # remove unused columns
     location.delete(:checked)
     location.delete(:notes)
@@ -75,7 +68,7 @@ CSV.open(CSV_ETL, "wb") do |csv|
 
     # append (lat,long) column
     location[:location] = "(#{location[:latitude]},#{location[:longitude]})"
-    csv << location.values
+    csv << csv_headers.map { |h| location[h] }
   end
 end
 
