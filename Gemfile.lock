@@ -1,19 +1,15 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    chronic (0.9.0)
     fusion_tables (0.4.1)
       gdata_19 (>= 1.1.2)
       json (>= 1.7.6)
     gdata_19 (1.1.5)
     json (1.7.6)
-    rake (0.8.7)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  chronic
   fusion_tables
   json
-  rake (= 0.8.7)
