@@ -72,11 +72,20 @@ CSV.open(CSV_ETL, "wb") do |csv|
   end
 end
 
-# FTP to ETL server
+# FTP to ETL server (with retries)
 puts "FTPing to ETL server"
-Net::FTP.open(ftp_url, ftp_user, ftp_pass) do |ftp|
-  ftp.passive = true
-  ftp.putbinaryfile(CSV_ETL)
+1.upto(4) do |i|
+  begin
+    Net::FTP.open(ftp_url, ftp_user, ftp_pass) do |ftp|
+      ftp.passive = true
+      ftp.debug_mode = true
+      ftp.putbinaryfile(CSV_ETL)
+    end
+    break
+  rescue
+    puts "Failed FTP attempt ##{i}" 
+    sleep 15
+  end
 end
 
 puts "done"
